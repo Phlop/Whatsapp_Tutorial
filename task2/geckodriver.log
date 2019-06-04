@@ -1,0 +1,24 @@
+1559157461971	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.poWkCMSaAoVD"
+1559157462298	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid extension permission: mozillaAddons
+1559157462298	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid extension permission: resource://pdf.js/
+1559157462298	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid extension permission: about:reader*
+1559157463557	Marionette	INFO	Listening on port 37879
+1559157463578	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: resource:///actors/NetErrorChild.jsm, line 781: TypeError: docShell.failedChannel is null
+JavaScript error: resource:///actors/OfflineAppsChild.jsm, line 30: TypeError: manifestURI is null
+JavaScript error: resource:///actors/NetErrorChild.jsm, line 781: TypeError: docShell.failedChannel is null
+JavaScript error: resource:///actors/OfflineAppsChild.jsm, line 30: TypeError: manifestURI is null
+JavaScript error: resource:///actors/NetErrorChild.jsm, line 781: TypeError: docShell.failedChannel is null
+JavaScript error: resource:///actors/OfflineAppsChild.jsm, line 30: TypeError: manifestURI is null
+JavaScript error: resource:///actors/NetErrorChild.jsm, line 781: TypeError: docShell.failedChannel is null
+JavaScript error: resource:///actors/OfflineAppsChild.jsm, line 30: TypeError: manifestURI is null
+JavaScript error: resource:///actors/NetErrorChild.jsm, line 781: TypeError: docShell.failedChannel is null
+JavaScript error: resource:///actors/OfflineAppsChild.jsm, line 30: TypeError: manifestURI is null
+JavaScript error: resource:///actors/NetErrorChild.jsm, line 781: TypeError: docShell.failedChannel is null
+JavaScript error: resource:///actors/OfflineAppsChild.jsm, line 30: TypeError: manifestURI is null
+JavaScript error: resource:///actors/NetErrorChild.jsm, line 781: TypeError: docShell.failedChannel is null
+JavaScript error: resource:///actors/OfflineAppsChild.jsm, line 30: TypeError: manifestURI is null
+JavaScript error: resource:///actors/NetErrorChild.jsm, line 781: TypeError: docShell.failedChannel is null
+JavaScript error: resource:///actors/OfflineAppsChild.jsm, line 30: TypeError: manifestURI is null
+JavaScript error: resource:///actors/NetErrorChild.jsm, line 781: TypeError: docShell.failedChannel is null
+JavaScript error: resource:///actors/OfflineAppsChild.jsm, line 30: TypeError: manifestURI is null
