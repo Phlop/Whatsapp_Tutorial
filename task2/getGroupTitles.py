@@ -26,7 +26,7 @@ except:
     driver = webdriver.Firefox(executable_path='./geckodriver/64/geckodriver');
 driver.set_page_load_timeout(3) 
 
-filename = "whatsapp_group_links.txt";
+filename = sys.argv[1];#"g";#whatsapp_group_links.txt";
 f = open(filename); # file containing the links to the whatsapp groups
 lines = f.readlines();
 count = 1;
@@ -35,6 +35,7 @@ count = 1;
 #wait = WebDriverWait(driver, 600)
 
 #time.sleep(15); # sleep for some time while I use my phone to scan the QR code
+out = open("group_names.txt","w");
 
 for line in lines:
     try:
@@ -44,9 +45,15 @@ for line in lines:
         driver.get(line);
         group_info = driver.find_element_by_css_selector(".block__title");
         title = group_info.get_attribute('innerHTML');
-        print group_id + "\t" + title;
+        if(title==""):
+            print >> sys.stderr, line, "not found";
+        else:
+            out.write(group_id + "\t" + title.encode("utf-8") + "\n");
         sleep_time = random.randint(1,5);
         time.sleep(sleep_time);
     except:
         print >> sys.stderr, "fx";
         pass;
+
+out.close();
+driver.close();
