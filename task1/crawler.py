@@ -10,12 +10,12 @@ import scrapy
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import Rule, CrawlSpider
 from scrapy.selector import Selector
+from scrapy.http import HtmlResponse
 
 
 OUT_FOLDER = './out/'
 CONFIG_FILES_PATH = './config_files/'
 whatsapp_invite_regex = r"(?i)(chat\.whatsapp\.com\/)(invite\/)?([a-zA-Z0-9]{22})"
-
 
 
 class WhatsappCrawler(scrapy.Spider):
@@ -30,19 +30,18 @@ class WhatsappCrawler(scrapy.Spider):
                        'defesa.org',
                        'play.google.com',
                        'facebook.com',
-                       'fb.com',
-                       'chat.whatsapp.com']
+                       'fb.com',]
   
   custom_settings = {
-    # Setting a 5 seconds delay between each request.
-    'DOWNLOAD_DELAY': 5,
+    # Setting a 15 seconds delay between each request.
+    'DOWNLOAD_DELAY': 15,
     'AUTOTHROTTLE_ENABLED': True,
     'HTTPCACHE_ENABLED': True,
     'CONCURRENT_REQUESTS': 500,
     'COOKIES_ENABLED': False,
     'RETRY_ENABLED': False,
     'DOWNLOAD_TIMEOUT': 10,
-    'CONCURRENT_REQUESTS_PER_DOMAIN': 3,
+    'CONCURRENT_REQUESTS_PER_DOMAIN': 5,
     'DEPTH_PRIORITY': 1,
     'SCHEDULER_DISK_QUEUE': 'scrapy.squeues.PickleFifoDiskQueue',
     'SCHEDULER_MEMORY_QUEUE': 'scrapy.squeues.FifoMemoryQueue',
@@ -70,8 +69,61 @@ class WhatsappCrawler(scrapy.Spider):
     gseeds = fseeds.readlines()
     fseeds.close()
 
-    for url in gseeds:
+    all_seeds = list()
+    for u in gseeds:
+      if str(u).lower().find('google.com') != -1:
+          yield scrapy.Request(u, callback=self.parse_initial)
+      else:
+	all_seeds.append(str(u.strip()) )
+    
+    print('URLs to find WhatsApp Groups')   
+    for url in all_seeds:
+      print url
       yield scrapy.Request(url, callback=self.parse)
+
+
+
+  def parse_initial(self, response):
+    self.log('Initial Search: %s' % response.url)
+    all_seeds = list()
+    sel = Selector(response)
+    all_links_list = sel.xpath('//a[@href]/@href').extract()
+    #self.log('BODY PAGE: %s' % response.body)
+    #gsearch_links_list = sel.xpath('//h3/a/@href').extract()
+    for n in all_links_list:
+       next = str(n)
+       if re.search('q=(.*)&start', next ):
+           if next[0] == '/': next = 'https://www.google.com.br'+next
+           all_seeds.append(next)
+
+    print('URLs to find WhatsApp Groups on Google')
+    for url in all_seeds:
+       try:
+         yield scrapy.Request(url, callback=self.parse)
+       except:
+         continue
+    matches = re.findall(whatsapp_invite_regex, str(response.body))
+    if len(matches):
+      with open(OUT_FOLDER+'whatsapp_invite_links', 'a') as whatsapp_file:
+        for match in matches:
+          self.log('Groups found: %s' % str(match))
+          whatsapp_file.write("https://" + "".join(match) + '\n')
+
+    items = []
+
+    # In case we're scraping a google's results page, grep all results links.
+    #if str(response.url).lower().find('google.com') != -1:
+    if str(response.body).lower().find('whatsapp') == -1:
+      gsearch_links_list = list()
+    else:
+      links = LinkExtractor(canonicalize=True, unique=True, deny_domains=self.forbidden_domains).extract_links(response)
+
+      for link in links:
+        if str(link.url).lower().find('whatsapp') == -1:
+          yield response.follow(link.url, callback=self.parse)
+
+
+
 
 
 
@@ -79,31 +131,27 @@ class WhatsappCrawler(scrapy.Spider):
     if str(response.body).lower().find('whatsapp') == -1:
       return
 
-    self.log('Visited: %s' % response.url)
-
+    self.log('Visiting: %s' % response.url)
+    #self.log('BODY PAGE: %s' % response.body)
+    
 
     matches = re.findall(whatsapp_invite_regex, str(response.body))
     if len(matches):
       with open(OUT_FOLDER+'whatsapp_invite_links', 'a') as whatsapp_file:
         for match in matches:
+          self.log('Groups found: %s' % str(match))
           whatsapp_file.write("https://" + "".join(match) + '\n')
 
     items = []
 
     # In case we're scraping a google's results page, grep all results links.
-    if str(response.url).lower().find('google.com') != -1:
-      sel = Selector(response)
-      gsearch_links_list = sel.xpath('//h3/a/@href').extract()
-      gsearch_links_list = [re.search('q=(.*)&sa',n).group(1) for n in gsearch_links_list]
-      gsearch_links_list = list(set(gsearch_links_list))
-
-      for url in gsearch_links_list:
-        yield response.follow(url, callback=self.parse)
+    #if str(response.url).lower().find('google.com') != -1:
+    if str(response.body).lower().find('whatsapp') == -1:
+      gsearch_links_list = list()
     else:
-      links = LinkExtractor(canonicalize=True, unique=True,
-                            deny_domains=self.forbidden_domains).extract_links(response)
+      links = LinkExtractor(canonicalize=True, unique=True, deny_domains=self.forbidden_domains).extract_links(response)
 
       for link in links:
-        if str(link.url).lower().find('chat.whatsapp.com') == -1:
+        if str(link.url).lower().find('whatsapp') == -1:
           yield response.follow(link.url, callback=self.parse)
 
