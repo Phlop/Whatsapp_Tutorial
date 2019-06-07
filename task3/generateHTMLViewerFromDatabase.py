@@ -9,7 +9,7 @@ dict_timeline = {};
 dict_groups = {};
 html_location = sys.argv[1]; # provide the location of a folder to write the html files to.
 
-db_name = sys.argv[1];
+db_name = sys.argv[2]; # database name
 db_conn = sqlite3.connect(db_name);
 cur = db_conn.cursor();
 cur.execute("SELECT key_remote_jid,data,timestamp,media_url,media_mime_type,media_size,media_name,remote_resource,recipient_count,forwarded FROM MESSAGES")
@@ -22,7 +22,7 @@ for i in cur.fetchall():
 
 cur.execute("SELECT key_remote_jid,subject FROM chat_list");
 
-temp_dict = {}
+temp_dict = {};
 
 for i in cur.fetchall():
 	temp_dict[i[0]] = i[1];
@@ -55,7 +55,7 @@ for line in lines:
 		data_type = "text";
 	if(groupid.find("@g.us")==-1):
 		continue;
-	groupid = (temp_dict[groupid]).encode('utf-8');
+#	groupid = (temp_dict[groupid]).encode('utf-8');
 	if(groupid in dict_groups):
 		tmp = dict_groups[groupid];
 		tmp[timestamp] = data + "\t" + user_num + "\t" + date_str + "\t" + data_type;
