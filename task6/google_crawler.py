@@ -143,22 +143,22 @@ def parse_date(raw_date):
 
         @return: (string) Formatted date string.
     '''
-  try:
-    pieces = raw_date.split()
+    try:
+        pieces = raw_date.split()
 
-    if len(pieces) == 5:  # x de x de x
-        year = int(pieces[4])
-        month = MONTHS[pieces[2]]
-        day = int(pieces[0])
+        if len(pieces) == 5:  # x de x de x
+            year = int(pieces[4])
+            month = MONTHS[pieces[2]]
+            day = int(pieces[0])
 
-        return date(year, month, day).isoformat()
-    elif len(pieces) == 3:  # x x atrás
-        offset = int(pieces[0])
-        return (date.today() - timedelta(days=offset)).isoformat()
-    else:  # unknown
-        return ''
-  except:
-    return '' 
+            return date(year, month, day).isoformat()
+        elif len(pieces) == 3:  # x x atrás
+            offset = int(pieces[0])
+            return (date.today() - timedelta(days=offset)).isoformat()
+        else:  # unknown
+            return ''
+    except:
+        return '' 
 
 
 def get_page_sources(html):
