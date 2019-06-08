@@ -1,16 +1,11 @@
-import os,glob;
-import sys,re,sqlite3
+import os;
+import sys,sqlite3
 import time,datetime;
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import sys,json,random;
+import sys,random;
 reload(sys)
 sys.setdefaultencoding('utf8')
-
-from urlparse import urlparse
-import magic
-
-group_re = re.compile("chat.whatsapp.com/\w+");
 
 file_names = [sys.argv[1]]; # folder containin the databases.
 
