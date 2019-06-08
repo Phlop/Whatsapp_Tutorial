@@ -143,7 +143,7 @@ def parse_date(raw_date):
 
         @return: (string) Formatted date string.
     '''
-
+  try:
     pieces = raw_date.split()
 
     if len(pieces) == 5:  # x de x de x
@@ -157,6 +157,8 @@ def parse_date(raw_date):
         return (date.today() - timedelta(days=offset)).isoformat()
     else:  # unknown
         return ''
+  except:
+    return '' 
 
 
 def get_page_sources(html):
