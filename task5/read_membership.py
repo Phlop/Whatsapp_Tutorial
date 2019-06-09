@@ -33,11 +33,6 @@ def main():
     cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
     print(cursor.fetchall())
 	
-    con = sqlite3.connect('msgstore.db')
-    cursor = con.cursor()
-    cursor.execute("SELECT * FROM INFORMATION_SCHEMA;")
-    print(cursor.fetchall())
-	
     print >> sys.stderr, "getting membership";
     getMembership(file_names);
 
